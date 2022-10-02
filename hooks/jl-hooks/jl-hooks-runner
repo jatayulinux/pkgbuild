@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Run jl hooks related commands.
+
+Lsb_release() {
+    local file=/etc/lsb-release
+
+    if [ -z "$(grep "^DISTRIB_CODENAME=" $file)" ] ; then
+        # add missing DISTRIB_CODENAME=
+        echo "DISTRIB_CODENAME=rolling" >> $file
+    fi
+    sed -i $file \
+        -e 's|^DISTRIB_ID=.*$|DISTRIB_ID=JatayuLinux|' \
+        -e 's|^DISTRIB_CODENAME=.*$|DISTRIB_CODENAME=rolling|' \
+        -e 's|^DISTRIB_DESCRIPTION=.*$|DISTRIB_DESCRIPTION=\"JatayuLinux\"|'
+}
+
+Os_release() {
+    local file=/usr/lib/os-release
+    local jlfile=/usr/lib/JatayuLinux-release
+
+    # Get URLs from the JatayuLinux web site!
+    local home=https://JatayuLinux.com
+    local doc=https://discovery.JatayuLinux.com
+    local support=https://forum.JatayuLinux.com
+    local bugs=https://forum.JatayuLinux.com/c/arch-based-related-questions/bug-reports
+
+    sed -i $file \
+        -e 's|^NAME=.*$|NAME=JatayuLinux|' \
+        -e 's|^PRETTY_NAME=.*$|PRETTY_NAME=JatayuLinux|' \
+        -e "s|^HOME_URL=.*$|HOME_URL='$home'|" \
+        -e "s|^DOCUMENTATION_URL=.*$|DOCUMENTATION_URL='$doc'|" \
+        -e "s|^SUPPORT_URL=.*$|SUPPORT_URL='$support'|" \
+        -e "s|^BUG_REPORT_URL=.*$|BUG_REPORT_URL='$bugs'|" \
+        -e "s|^LOGO=.*$|LOGO=/etc/share/icons/jatayu/JatayuLinux-logo.png|" \
+        -e "s|^ID=.*$|ID=JatayuLinux|" \
+        -e "s|^ID_LIKE=.*$|ID_LIKE=arch|"
+
+    if [ -z "$(grep "^ID_LIKE=" $file)" ] && [ -n "$(grep "^ID=" $file)" ] ; then
+        # add missing ID_LIKE=
+        sed -i $file -e '/^ID=/a \ID_LIKE=arch'
+    fi
+    if [ -r $jlfile ] ; then
+        # fix BUILD_ID for JatayuLinux
+        local buildid="$(grep "^VERSION=" $jlfile | awk '{print $1}' | cut -d '=' -f 2)"
+        sed -i $file -e "s|^BUILD_ID=.*$|BUILD_ID=$buildid|"
+    fi
+}
+
+Issues() {
+    sed -i 's|Arch|JatayuLinux|g' /etc/issue /usr/share/factory/etc/issue
+}
+
+Main()
+{
+    local hookname="$1"
+
+    case "$hookname" in
+        os-release)  Os_release ;;
+        lsb-release) Lsb_release ;;
+        "")          Os_release
+                     Lsb_release
+                     Issues
+                     ;;
+    esac
+}
+
+Main "$@"
