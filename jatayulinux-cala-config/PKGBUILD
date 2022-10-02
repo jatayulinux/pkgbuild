@@ -1,0 +1,24 @@
+pkgname=jatayulinux-cala-config
+destname="/etc"
+pkgver=22.1
+pkgrel=1
+pkgdesc="calamares for JatayuLinux"
+arch=('any')
+url="https://github.com/jatayulinux"
+license=('GPL3')
+makedepends=('git')
+depends=()
+conflicts=()
+provides=("${pkgname}")
+options=(!strip !emptydirs)
+source=(${pkgname}::"git+${url}/${pkgname}")
+sha256sums=('SKIP')
+package() {
+	#mkdir -p "${pkgdir}${_licensedir}${pkgname}"
+	#mv "${srcdir}/${pkgname}/"LICENSE "${pkgdir}${_licensedir}${pkgname}/LICENSE"
+	#mkdir -p "${pkgdir}${_destname}"
+	#cp -r "${srcdir}/${pkgname}/calamares/"* "${pkgdir}${_destname}"
+	install -dm755 ${pkgdir}${destname}
+	cp -r ${srcdir}/${pkgname}${destname}/* ${pkgdir}/etc
+}
+
