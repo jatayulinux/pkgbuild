@@ -1,4 +1,4 @@
-pkgname=jatayulinux-cala-config
+pkgname=jatayu-cala-config
 destname="/etc"
 pkgver=22.1
 pkgrel=1
