@@ -1,4 +1,4 @@
-pkgname=ghost-theme
+pkgname=sddm-theme-jatayu
 pkgver=22.1
 pkgrel=1
 pkgdesc="beautiful all-rounder theme"
@@ -13,7 +13,7 @@ options=(!strip !emptydirs)
 source=(${pkgname}::"git+${url}/${pkgname}")
 sha256sums=('SKIP')
 package() {
-  cd "$srcdir/ghost-theme/sugar-candy/"
+  cd "$srcdir/sddm-theme-jatayu/sugar-candy/"
   install -Dm644 "Main.qml" "$pkgdir/usr/share/sddm/themes/sugar-candy/Main.qml"
   install -Dm644 "theme.conf" "$pkgdir/usr/share/sddm/themes/sugar-candy/theme.conf"
   install -Dm644 "metadata.desktop" "$pkgdir/usr/share/sddm/themes/sugar-candy/metadata.desktop"
@@ -21,5 +21,7 @@ package() {
   find ./Backgrounds -type f -exec install -Dm644 {} "$pkgdir/usr/share/sddm/themes/sugar-candy/{}" \;
   find ./Components -type f -exec install -Dm644 {} "$pkgdir/usr/share/sddm/themes/sugar-candy/{}" \;
   install -Dm 644 "COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+
+  
 }
  
