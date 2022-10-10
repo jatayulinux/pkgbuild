@@ -1,0 +1,25 @@
+pkgname=ghost-theme
+pkgver=22.1
+pkgrel=1
+pkgdesc="beautiful all-rounder theme"
+arch=('any')
+url="https://github.com/jatayulinux/"
+license=('GPL3')
+depends=('sddm>=0.18' 'qt5-graphicaleffects' 'qt5-quickcontrols2' 'qt5-svg')
+makedepends=('git')
+provides=("sddm-sugar-candy")
+conflicts=("sddm-sugar-candy")
+options=(!strip !emptydirs)
+source=(${pkgname}::"git+${url}/${pkgname}")
+sha256sums=('SKIP')
+package() {
+  cd "$srcdir/ghost-theme/sugar-candy/"
+  install -Dm644 "Main.qml" "$pkgdir/usr/share/sddm/themes/sugar-candy/Main.qml"
+  install -Dm644 "theme.conf" "$pkgdir/usr/share/sddm/themes/sugar-candy/theme.conf"
+  install -Dm644 "metadata.desktop" "$pkgdir/usr/share/sddm/themes/sugar-candy/metadata.desktop"
+  find ./Assets -type f -exec install -Dm644 {} "$pkgdir/usr/share/sddm/themes/sugar-candy/{}" \;
+  find ./Backgrounds -type f -exec install -Dm644 {} "$pkgdir/usr/share/sddm/themes/sugar-candy/{}" \;
+  find ./Components -type f -exec install -Dm644 {} "$pkgdir/usr/share/sddm/themes/sugar-candy/{}" \;
+  install -Dm 644 "COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+ 
